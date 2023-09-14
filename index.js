@@ -28,18 +28,28 @@ io.on("connection", (socket) => {
 
   socket.on("sendNotification", ({ senderName, receiverName, type }) => {
     const receiver = getUser(receiverName);
-    io.to(receiver.socketId).emit("getNotification", {
-      senderName,
-      type,
-    });
+    if (receiver) {
+      io.to(receiver.socketId).emit("getNotification", {
+        senderName,
+        type,
+      });
+    } else {
+      // Handle the case where the receiver is not found (e.g., log an error).
+      console.log(`Receiver ${receiverName} not found.`);
+    }
   });
 
   socket.on("sendText", ({ senderName, receiverName, text }) => {
     const receiver = getUser(receiverName);
-    io.to(receiver.socketId).emit("getText", {
-      senderName,
-      text,
-    });
+    if (receiver) {
+      io.to(receiver.socketId).emit("getText", {
+        senderName,
+        text,
+      });
+    } else {
+      // Handle the case where the receiver is not found (e.g., log an error).
+      console.log(`Receiver ${receiverName} not found.`);
+    }
   });
 
   socket.on("disconnect", () => {
